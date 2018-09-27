@@ -76,10 +76,10 @@
     <div class="block" style="margin-top:50px;text-align: right;">
       <el-pagination
         :current-page="currentPage4"
-          @size-change="handleSizeChange"
         :page-sizes="[100, 200, 300, 400]"
-          @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
         :page-size="100"
+        @current-change="handleCurrentChange"
         layout="total, sizes, prev, pager, next, jumper"
         :total="400"/>
     </div>
@@ -132,7 +132,7 @@ export default {
   methods: {
     handleClick(tab, event) {
       console.log(tab, event)
-      },
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
     },

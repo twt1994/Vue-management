@@ -67,23 +67,25 @@
     </div>
     <div class="block" style="margin-top:50px;text-align: right;">
       <el-pagination
-        @size-change="handleSizeChange"
         :current-page="currentPage4"
-        @current-change="handleCurrentChange"
         :page-sizes="[100, 200, 300, 400]"
         :page-size="100"
+        :total="400"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"/>
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
     </div>
   </div>
 </template>
-
 <script>
-// import { getList } from '@/api/table'
+import request from '@/utils/request'
 
 export default {
   data() {
     return {
+      Listdata: {
+
+      },
       currentPage4: 4,
       userName: '',
       options: [
@@ -138,7 +140,20 @@ export default {
   },
   created() {
   },
+  mounted() {
+    this.getList() // 页面进来第一次加载用户列表数据
+  },
   methods: {
+    // 用户列表数据
+    getList() {
+      request({
+        url: '/userInfo/selectUserInfo',
+        methods: 'post',
+        data: this.Listdata
+      }).then(res => {
+
+      })
+    },
     handleEdit(index, row) {
       console.log(index, row)
     },

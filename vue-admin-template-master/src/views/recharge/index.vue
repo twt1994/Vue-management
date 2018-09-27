@@ -17,7 +17,7 @@
       <el-date-picker
         v-model="value6"
         type="daterange"
-        range-separator=" 至 "
+        range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"/>
       <el-button type="primary" style="margin-left:20px;">搜索</el-button>
@@ -60,11 +60,11 @@
       <div style="display: inherit;text-align: left;">总充值金额：1185元</div>
       <el-pagination
         :current-page="currentPage4"
-        @size-change="handleSizeChange"
         :page-sizes="[100, 200, 300, 400]"
-        @current-change="handleCurrentChange"
         :page-size="100"
+        @size-change="handleSizeChange"
         layout="total, sizes, prev, pager, next, jumper"
+        @current-change="handleCurrentChange"
         :total="400"/>
     </div>
   </div>

@@ -83,4 +83,5 @@ module.exports = {
     // `npm run build:prod --generate_report`
     generateAnalyzerReport: process.env.npm_config_generate_report || false
   }
+
 }
