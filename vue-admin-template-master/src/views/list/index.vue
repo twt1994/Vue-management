@@ -2,11 +2,11 @@
   <div class="app-container">
     <div class="user">
       用户名:&nbsp;<el-input
-        v-model = "userName"
+        v-model = "Listdata.phone"
         placeholder ="请输入用户名"
         clearable
         style="width:200px;margin-right:30px;"/>
-      等级:&nbsp;<el-select v-model="value">
+      等级:&nbsp;<el-select v-model="Listdata.lv">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -84,10 +84,13 @@ export default {
   data() {
     return {
       Listdata: {
-
+        phone:15038232374,
+        lv:1,
+        current:1,
+        size:10
       },
-      currentPage4: 4,
-      userName: '',
+      // userName: '',
+      currentPage4:1,
       options: [
         {
           value: '1',
@@ -146,10 +149,11 @@ export default {
   methods: {
     // 用户列表数据
     getList() {
+      console.log(this.Listdata,"1111111111")
       request({
-        url: '/userInfo/selectUserInfo',
-        methods: 'post',
-        data: this.Listdata
+        url: '/userInfo/login ',
+        method: 'post',
+        data: {},
       }).then(res => {
 
       })
