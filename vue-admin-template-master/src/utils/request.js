@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
-import store from '../store'
+// import store from '../store'
 import { getToken } from '@/utils/auth'
 import router from '../router'
 
@@ -13,8 +13,8 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // if (store.getters.token) {
-    console.log(store.getters.token)
-    config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    // console.log(store.getters.token)
+    config.headers['token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     // }
     return config
   },

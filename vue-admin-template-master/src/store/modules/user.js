@@ -3,7 +3,7 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
   state: {
-    token: getToken(), // 得到token
+    token: getToken(),
     name: '',
     avatar: '',
     roles: []
@@ -32,7 +32,7 @@ const user = {
         login(username, userInfo.password).then(response => {
           const data = response.data
           setToken(data.token)
-          commit('SET_TOKEN', data.token)
+          commit('SET_TOKEN', data.token)// 登录成功后将token存储在cookie之中
           resolve()
         }).catch(error => {
           reject(error)
