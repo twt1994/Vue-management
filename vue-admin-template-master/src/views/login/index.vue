@@ -6,7 +6,7 @@
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input v-model="loginForm.username" name="username" type="text" auto-complete="on" placeholder="username" />
+        <el-input v-model="loginForm.username" name="username" type="text" auto-complete="on" placeholder="账号" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
@@ -17,7 +17,7 @@
           v-model="loginForm.password"
           name="password"
           auto-complete="on"
-          placeholder="password"
+          placeholder="密码"
           @keyup.enter.native="handleLogin" />
         <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye" />
@@ -28,10 +28,10 @@
           登录
         </el-button>
       </el-form-item>
-      <div class="tips">
+      <!-- <div class="tips">
         <span style="margin-right:20px;">账户: admin</span>
         <span> 密码: admin</span>
-      </div>
+      </div> -->
     </el-form>
   </div>
 </template>
@@ -58,8 +58,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'admin'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -158,16 +158,16 @@ $light_gray:#eee;
     padding: 35px 35px 15px 35px;
     margin: 120px auto;
   }
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
-  }
+  // .tips {
+  //   font-size: 14px;
+  //   color: #fff;
+  //   margin-bottom: 10px;
+  //   span {
+  //     &:first-of-type {
+  //       margin-right: 16px;
+  //     }
+  //   }
+  // }
   .svg-container {
     padding: 6px 5px 6px 15px;
     color: $dark_gray;
