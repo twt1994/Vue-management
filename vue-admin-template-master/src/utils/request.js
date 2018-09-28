@@ -6,17 +6,7 @@ import { getToken } from '@/utils/auth'
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
-  timeout: 5000, // 请求超时时间
-  validateStatus(status) {
-    // 一般来说，http status为200-300之间时，均判定为请求通过，你可以在这里修改这个配置(不建议修改)
-    return status === 200
-  },
-  headers: {
-    // 定义 post 请求编码格式
-    post: {
-      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-    }
-  }
+  timeout: 5000// 请求超时时间
 })
 // request拦截器
 service.interceptors.request.use(

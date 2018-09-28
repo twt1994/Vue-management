@@ -148,7 +148,7 @@ export default {
     getList() {
       request({
         url: '/userInfo/selectUserInfo',
-        methods: 'post',
+        method: 'post',
         data: this.Listdata
       }).then(res => {
 
