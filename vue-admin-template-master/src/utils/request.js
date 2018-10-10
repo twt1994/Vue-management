@@ -3,7 +3,7 @@ import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 import router from '../router'
-
+axios.defaults.headers.post['Content-Type'] = 'application/json'
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
@@ -13,8 +13,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // if (store.getters.token) {
-    console.log(store.getters.token)
-    config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    config.headers['token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     // }
     return config
   },
@@ -37,19 +36,19 @@ service.interceptors.response.use(
       //   type: 'error',
       //   duration: 5 * 1000
       // })
-      if (res.code === 401) {
-      	MessageBox.confirm(
-          '你还未登录或者重新登录',
-          '确定登出',
-          {
-            confirmButtonText: '重新登录',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        ).then(() => {
-          router.push('login')
-        })
-      }
+      // if (res.code === 401) {
+      // 	MessageBox.confirm(
+      //     '你还未登录或者重新登录',
+      //     '确定登出',
+      //     {
+      //       confirmButtonText: '重新登录',
+      //       cancelButtonText: '取消',
+      //       type: 'warning'
+      //     }
+      //   ).then(() => {
+      //     router.push('login')
+      //   })
+      // }
       // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
       // if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
       //   MessageBox.confirm(
@@ -67,6 +66,7 @@ service.interceptors.response.use(
       //   })
       // }
       // return Promise.reject('error')
+      return response.data
     } else {
       return response.data
     }

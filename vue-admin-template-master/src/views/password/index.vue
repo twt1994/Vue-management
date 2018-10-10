@@ -1,93 +1,131 @@
 <template>
   <div class="app-container">
-    <el-form ref="ruleForm2" :model="ruleForm2" :rules="rules2" style="width:500px;" status-icon label-width="100px" class="demo-ruleForm">
-      <el-form-item label="旧密码" prop="pass">
-        <el-input v-model="ruleForm2.pass" type="password" autocomplete="off"/>
+    <el-form ref="ruleForm" :model="ruleForm" :rules="rules2" auto-complete="on" label-width="100px" class="demo-ruleForm">
+      <el-form-item label="旧密码" prop="oldPwd" style="width:300px;">
+        <el-input v-model="ruleForm.oldPwd" type="password" auto-complete="on" />
       </el-form-item>
-      <el-form-item label="新密码" prop="newpassword">
-        <el-input v-model.number="ruleForm2.newpassword"/>
+      <el-form-item label="新密码" prop="newPwd" style="width:300px;">
+        <el-input v-model="ruleForm.newPwd" type="password" auto-complete="on" />
       </el-form-item>
-      <el-form-item label="确认密码" prop="checkPass">
-        <el-input v-model="ruleForm2.checkPass" type="password" autocomplete="off"/>
+      <el-form-item label="确认密码" prop="newpass" style="width:300px;">
+        <el-input v-model="ruleForm.newpass" type="password" auto-complete="on" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
-        <el-button @click="resetForm('ruleForm2')">重置</el-button>
+        <el-button type="primary" @click.native.prevent="modifyPassword">提交</el-button>
+        <!-- <el-button @click="resetForm('ruleForm2')">重置</el-button> -->
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+import API from '@/utils/api'
+import { removeToken } from '@/utils/auth'
+import { isvalidUsername } from '@/utils/validate'
+// import router from './router'
+// let vm
 export default {
+  directives: {
+    focus: {
+
+      inserted: function(el) {
+        el.focus()
+      }
+    }
+  },
   data() {
-    var validatePass1 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'))
-      } else {
-        if (this.ruleForm2.checkPass !== '') {
-          this.$refs.ruleForm2.validateField('checkPass')
-        }
-        callback()
-      }
-    }
     var validatePass = (rule, value, callback) => {
+      console.log(value, 12314)
       if (value === '') {
-        callback(new Error('请输入密码'))
+        callback(new Error('请输入旧密码'))
       } else {
-        if (this.ruleForm2.checkPass !== '') {
-          this.$refs.ruleForm2.validateField('checkPass')
-        }
+        // if (this.ruleForm.oldPwd !== '') {
+        //   this.$refs.ruleForm.validateField('oldPwd')
+        // }
         callback()
       }
     }
-    var validatePass2 = (rule, value, callback) => {
+    const validatePass1 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'))
-      } else if (value !== this.ruleForm2.pass) {
+        callback(new Error('请入新密码'))
+      } else {
+        // if (this.ruleForm.newPwd !== '') {
+        //   this.$refs.ruleForm.validateField('newPwd')
+        // }
+        callback()
+      }
+    }
+    const validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次确认新密码'))
+      } else if (value !== this.ruleForm.newPwd) {
         callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
       }
     }
     return {
-      ruleForm2: {
-        pass: '',
-        checkPass: '',
-        newpassword: ''
+      ruleForm: {
+        oldPwd: '',
+        newPwd: '',
+        newpass: ''
       },
       rules2: {
-        pass: [
+        oldPwd: [
           { validator: validatePass, trigger: 'blur' }
         ],
-        checkPass: [
-          { validator: validatePass2, trigger: 'blur' }
-        ],
-        newpassword: [
+        newPwd: [
           { validator: validatePass1, trigger: 'blur' }
+        ],
+        newpass: [
+          { validator: validatePass2, trigger: 'blur' }
         ]
       }
     }
   },
+  mounted() {
+    // vm = this
+  },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
+    modifyPassword() {
+      this.$refs.ruleForm.validate(valid => {
+        console.log(this.$refs.ruleForm)
+        if (!valid) {
+          return
+        //   alert('submit!')
+        // } else {
+        //   console.log('error submit!!')
+        //   return false
         }
       })
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
+      API.modifyPassword(this.ruleForm).then(res => {
+        if (res.code === 200) {
+          this.$message({
+            showClose: true,
+            message: res.message,
+            type: 'success'
+          })
+          removeToken()
+          this.$router.push('/login')
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        // this.loading = false
+      })
     }
   }
 }
+
 </script>
 
 <style scoped>
-
+.line{
+  text-align: center;
+}
 </style>
 
