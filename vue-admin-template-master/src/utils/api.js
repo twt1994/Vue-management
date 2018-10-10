@@ -9,11 +9,11 @@ const API = {
     })
   },
   // 汇率列表
-  selectExchangeRate: (data) => {
+  selectExchangeRate: () => {
     return request({
       url: '/exchangeRate/selectExchangeRate  ',
       method: 'post',
-      data: data
+      data: {}
       //          load:true
     })
   },

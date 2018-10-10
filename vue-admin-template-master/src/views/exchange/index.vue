@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div v-for="item in form" :key="item.id" class="box" style="margin:30px 0 30px 30px;">
+    <div v-for="item in param" :key="item.id" class="box" style="margin:30px 0 30px 30px;">
       <span>{{ item.name }}</span>
       <input v-model ="item.value" style="width:200px;">
     </div>
@@ -15,9 +15,7 @@ export default {
   name: 'Exchange',
   data() {
     return {
-      form: {
-      },
-      list: {}
+      param: []
     }
   },
   mounted() {
@@ -26,10 +24,10 @@ export default {
   methods: {
     // 汇率列表
     selectExchangeRate() {
-      API.selectExchangeRate(this.form).then(res => {
+      API.selectExchangeRate().then(res => {
         if (res.code === 200) {
           console.log(res.data)
-          this.form = res.data
+          this.param = res.data
         } else {
           this.$message({
             showClose: true,
@@ -43,11 +41,10 @@ export default {
     },
     // 修改汇率
     modifyExchangeRate() {
-      API.modifyExchangeRate(JSON.stringify(this.list)).then(res => {
-        console.log(JSON.stringify(this.list))
+      var obj = {"param":JSON.stringify(this.param)};
+      API.modifyExchangeRate(obj).then(res => {
         if (res.code === 200) {
-          console.log(res.data)
-          // this.form = res.data
+          this.selectExchangeRate()
         } else {
           this.$message({
             showClose: true,
