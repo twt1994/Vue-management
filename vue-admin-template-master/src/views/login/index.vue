@@ -130,12 +130,10 @@ export default {
   }
 }
 </script>
-
 <style rel="stylesheet/scss" lang="scss">
 	$bg:#2d3a4b;
 	$light_gray:#eee;
 	/* reset element-ui css */
-
 	.login-container {
 		.el-input {
 			display: inline-block;

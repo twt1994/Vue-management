@@ -2,11 +2,11 @@
   <div class="app-container">
     <div class="user">
       用户名:&nbsp;<el-input
-        v-model = "Listdata.phone"
+        v-model = "tradeRecordData.phone"
         placeholder ="请输入用户名"
         clearable
         style="width:200px;margin-right:30px;"/>
-      等级:&nbsp;<el-select v-model="Listdata.lv">
+      等级:&nbsp;<el-select v-model="tradeRecordData.lv">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -78,21 +78,17 @@
   </div>
 </template>
 <script>
-import request from '@/utils/request'
-// import axios from 'axios'
-// import qs from 'qs'
+	import { setToken } from '@/utils/auth'
+	import API from '@/utils/api'
 
 export default {
   data() {
     return {
-      Listdata: {
-        phone: 15038232374
-        // token: '122222222222222223'
-        // lv: 1,
-        // current: 1,
-        // size: 10
-        // uid: 12345345,
-        // lv: 1
+      tradeRecordData: {
+        phone: 15038232374,
+        lv:'',
+        current:'',
+        size:''
       },
       // userName: '',
       phone: 15038232374,
@@ -154,20 +150,11 @@ export default {
   },
   methods: {
     // 用户列表数据
-    getList() {
-      request({
-        url: '/userInfo/getUserInfo ',
-        method: 'post',
-        data: this.Listdata
-      }).then(res => {
-
-      })
-    },
-    // getList() {
-    //   var qs = require('qs')
-    //   var instance = axios.create({ headers: { 'content-type': 'application/x-www-form-urlencoded' }})
-    //   instance.post(`/userInfo/getCode`, qs.stringify(params)).then(res => res.data)
-    // },
+    getList(){
+				API.getList(this.tradeRecordData).then(res => {
+					
+				})
+			},
     handleEdit(index, row) {
       console.log(index, row)
     },
