@@ -26,13 +26,13 @@ const API = {
       //          load:true
     })
   },
-  // 充值记录列表
+  // 充值列表/后台
   selectRecharge: (data) => {
     return request({
-      url: '  /rechargeRecord/selectRecharge  ',
+      url: '/rechargeRecord/selectRecharge',
       method: 'post',
       data: data
-      //          load:true
+      //          load:true /rechargeRecord/selectRecharge
     })
   },
   // 充值/提现记录
@@ -53,7 +53,7 @@ const API = {
       //          load:true
     })
   },
-  // 交易记录
+  // 查看交易记录/前台/后台
   selectGoodsOrder: (data) => {
     return request({
       url: '/goodsOrder/selectGoodsOrder',
@@ -116,10 +116,19 @@ const API = {
     //          load:true
     })
   },
-  // 帮助富文本
+  // 修改帮助/后台
   modifyHelpConfig: (data) => {
     return request({
       url: '/helpConfig/modifyHelpConfig    ',
+      method: 'post',
+      data: data
+    //          load:true
+    })
+  },
+  // 上传文件/后台
+  uploadingFile: (data) => {
+    return request({
+      url: '/helpConfig/uploadingFile',
       method: 'post',
       data: data
     //          load:true

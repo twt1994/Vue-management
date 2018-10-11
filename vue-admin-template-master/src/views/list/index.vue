@@ -78,17 +78,17 @@
   </div>
 </template>
 <script>
-	import { setToken } from '@/utils/auth'
-	import API from '@/utils/api'
+import { setToken } from '@/utils/auth'
+import API from '@/utils/api'
 
 export default {
   data() {
     return {
       tradeRecordData: {
         phone: 15038232374,
-        lv:'',
-        current:'',
-        size:''
+        lv: '',
+        current: '',
+        size: ''
       },
       // userName: '',
       phone: 15038232374,
@@ -150,11 +150,11 @@ export default {
   },
   methods: {
     // 用户列表数据
-    getList(){
-				API.getList(this.tradeRecordData).then(res => {
-					
-				})
-			},
+    // getList(){
+    // 		API.getList(this.tradeRecordData).then(res => {
+
+    // 		})
+    // 	},
     handleEdit(index, row) {
       console.log(index, row)
     },

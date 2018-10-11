@@ -12,14 +12,15 @@
         name="img"/>
       <quill-editor
         ref="myQuillEditor"
-        v-model="content"
+        v-model="msg"
         :options="editorOption"
         @change="onEditorChange($event)"/>
     </div>
-    <el-button :center="true" type="primary" style="margin-top:30px;width:200px;margin-left:600px;">确定</el-button>
+    <el-button :center="true" type="primary" style="margin-top:30px;width:200px;margin-left:600px;" @click="oksubmit">确定</el-button>
   </div>
 </template>
 <script>
+import API from '@/utils/api'
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'], // toggled buttons
   [{ 'header': 1 }, { 'header': 2 }], // custom button values
@@ -39,7 +40,7 @@ export default {
   data() {
     return {
       quillUpdateImg: false, // 根据图片上传状态来确定是否显示loading动画，刚开始是false,不显示
-      content: null,
+      msg: '',
       editorOption: {
         placeholder: '',
         theme: 'snow', // or 'bubble'
@@ -66,9 +67,29 @@ export default {
     }
   },
   methods: {
+    // 修改帮助后台
+    modifyHelpConfig() {
+      API.modifyHelpConfig(this.msg).then(res => {
+        if (res.code === 200) {
+          console.log(res.data)
+          // this.param = res.data
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.loading = false
+      })
+    },
+    oksubmit() {
+      this.modifyHelpConfig()
+    },
     onEditorChange({ editor, html, text }) { // 内容改变事件
       console.log('---内容改变事件---')
-      this.content = html
+      this.msg = text
       console.log(html)
     },
     // 富文本图片上传前

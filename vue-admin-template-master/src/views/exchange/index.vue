@@ -41,7 +41,7 @@ export default {
     },
     // 修改汇率
     modifyExchangeRate() {
-      var obj = {"param":JSON.stringify(this.param)};
+      var obj = { 'param': JSON.stringify(this.param) }
       API.modifyExchangeRate(obj).then(res => {
         if (res.code === 200) {
           this.selectExchangeRate()
