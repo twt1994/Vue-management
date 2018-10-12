@@ -71,6 +71,15 @@ const API = {
       //          load:true
     })
   },
+  // 重置密码
+  resetPwd: (data) => {
+    return request({
+      url: '/userInfo/resetPwd ',
+      method: 'post',
+      data: data
+      //          load:true
+    })
+  },
   // 获取用户信息 成功
   getUserInfo: (data) => {
     return request({
