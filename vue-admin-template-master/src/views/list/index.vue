@@ -7,13 +7,16 @@
         clearable
         style="width:200px;margin-right:30px;"/>
       等级:&nbsp;<el-select v-model="tradeRecordData.lv">
-        <el-option
+        <el-option label="白银会员" value="0"></el-option>
+        <el-option label="黄金会员" value="1"></el-option>
+        <el-option label="钻石会员" value="2"></el-option>
+        <!-- <el-option
           v-for="item in options"
           :key="item.value"
           :label="item.label"
-          :value="item.value"/>
+          :value="item.value"/> -->
       </el-select>
-      <el-button type="primary" style="margin-left:20px;">搜索</el-button>
+      <el-button type="primary" style="margin-left:20px;" @click="selectUserInfo">搜索</el-button>
     </div>
     <div class="table" style="margin-top:30px">
       <el-table :data="tableData" style="width:100%;border-right:1px solid #eee;">
@@ -25,10 +28,10 @@
         <el-table-column prop="createTime" label="注册时间"/>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <span style="color:blue;cursor:pointer" @click="resetPwd(scope.row)">重置密码</span>
-            <span style="color:blue;cursor:pointer" @click="detail(scope.row)">修改等级</span>
-            <!-- <span style="color:blue;cursor:pointer" @click="detail(scope.row)">查看</span>
-            <span style="color:blue;cursor:pointer" @click="paymentGoodsOrder(scope.row.id)">付款</span>
+            <span style="color:blue;cursor:pointer" @click="resetPwd(scope.row.id)">重置密码</span>
+            <span style="color:blue;cursor:pointer" @click="modifyLv(scope.row.id)">修改等级</span>
+            <span style="color:blue;cursor:pointer" @click="rechargeAmount(scope.row.id)">充值</span>
+            <!--<span style="color:blue;cursor:pointer" @click="paymentGoodsOrder(scope.row.id)">付款</span>
             <span style="color:blue;cursor:pointer" @click="cancelOrder(scope.row.orderNumber)">取消订单</span> -->
           </template>
         </el-table-column>
@@ -45,27 +48,46 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
-    <!--添加的弹出框-->
-    <el-dialog
-      :visible.sync="centerDialogVisible">
-      <el-form ref="userMsg" :model="userMsg" :rules="rules2" status-icon label-width="100px" class="demo-ruleForm">
-        <el-form-item label="新密码" prop="pid">
-          <el-input v-model="userMsg.pid" type="password" autocomplete="off"/>
+    <!--添加重置密码弹出框-->
+    <el-dialog :visible.sync="centerDialogVisible" @close="closeDialog">
+      <el-form ref="userMsg" :model="userMsg" :rules="userMsgrules" auto-complete="on" label-position="left" class="demo-ruleForm">
+        <el-form-item label="新密码" prop="pwd">
+          <el-input v-model="userMsg.pwd" type="password" auto-complete="on"/>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPass">
-          <el-input v-model="userMsg.checkPass" type="password" autocomplete="off"/>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('userMsg')">确定</el-button>
-          <!-- <el-button @click="resetForm('ruleForm2')">重置</el-button> -->
+          <el-input v-model="userMsg.checkPass" type="password" auto-complete="on"/>
         </el-form-item>
       </el-form>
+      <div slot="footer" style="text-align:center">
+				<el-button type="primary" @click="submitForm">确 定</el-button>
+			</div>
+    </el-dialog>
+     <!--添加修改等级弹出框-->
+     <el-dialog :visible.sync="gradeDialogVisible" @close="gradecloseDialog">
+       等级:&nbsp;<el-select v-model="lvform.lv">
+        <el-option label="白银会员" value="0"></el-option>
+        <el-option label="黄金会员" value="1"></el-option>
+        <el-option label="钻石会员" value="2"></el-option>
+        </el-select>
+      <div slot="footer" style="text-align:center">
+				<el-button type="primary" @click="gradesubmit">确 定</el-button>
+			</div>
+    </el-dialog>
+    <!-- 充值弹窗 -->
+    <el-dialog :visible.sync="rechargeDialogVisible" @close="rechargecloseDialog">
+       输入金额:&nbsp;<el-input
+        v-model="rechargeform.money"
+        style="width:200px;margin-right:30px;"/>
+      <div slot="footer" style="text-align:center">
+				<el-button type="primary" @click="rechargesubmit">确 定</el-button>
+			</div>
     </el-dialog>
   </div>
 </template>
 <script>
 import { setToken } from '@/utils/auth'
 import API from '@/utils/api'
+import { getLoginData } from '@/utils/auth'
 import { isvalidUsername } from '@/utils/validate'
 export default {
   data() {
@@ -78,22 +100,24 @@ export default {
       }
     }
     var validatePass2 = (rule, value, callback) => {
+      console.log(value)
       if (value === '') {
         callback(new Error('请再次输入密码'))
-      } else if (value !== this.userMsg.pass) {
+      } else if (value !== this.userMsg.pwd) {
         callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
       }
     }
     return {
+      num:'',
       userMsg: {
         pwd: '',
         uid: '',
         checkPass: ''
       },
-      rules2: {
-        pid: [
+      userMsgrules: {
+        pwd: [
           { validator: validatePass, trigger: 'blur' }
         ],
         checkPass: [
@@ -101,6 +125,8 @@ export default {
         ]
       },
       centerDialogVisible: false,
+      gradeDialogVisible:false,
+      rechargeDialogVisible:false,
       total: 0,
       tradeRecordData: {
         phone: '1',
@@ -108,20 +134,14 @@ export default {
         current: 1,
         size: 10
       },
-      options: [
-        {
-          value: '0',
-          label: '白银会员'
-        },
-        {
-          value: '1',
-          label: '黄金会员'
-        },
-        {
-          value: '2',
-          label: '钻石会员'
-        }
-      ],
+      lvform:{
+        lv: '0',
+        uid:''
+      },
+      rechargeform:{
+        money: '',
+        uid:''
+      },
       value: '1',
       tableData: [
       ]
@@ -133,21 +153,18 @@ export default {
     this.selectUserInfo() // 页面进来第一次加载用户列表数据
   },
   methods: {
-    //  submitForm() {
-    //   this.$refs.loginForm.validate(valid => {
-    //     if (!valid) {
-    //       return
-    //     }
-    //   },
-    submitForm(userMsg) {
-      this.$refs[userMsg].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+    //店家×号，清空输入内容
+    closeDialog(){
+        this.$refs['userMsg'].resetFields();
+        this.userMsg.pwd=''
+        this.userMsg.uid=''
+        this.userMsg.checkPass=''
+    },
+    gradecloseDialog(){
+      this.lvform.lv=0
+    },
+    rechargecloseDialog(){
+      this.rechargeform.money=''
     },
     // 用户列表数据
     selectUserInfo() {
@@ -160,6 +177,7 @@ export default {
             return
           }
           this.tableData.forEach(ele => {
+            console.log(ele)
             const time = new Date(ele.createTime)
             ele.createTime = time.getFullYear() + '-' +
 											(time.getMonth() + 1) + '-' +
@@ -179,16 +197,20 @@ export default {
         this.loading = false
       })
     },
-    // 重置密码操作
-    resetPwd() {
-      this.centerDialogVisible = true
+    //点击确定修改密码
+    submitForm() {
+       this.$refs['userMsg'].resetFields();
+      this.centerDialogVisible=false
       API.resetPwd(this.userMsg).then(res => {
         if (res.code === 200) {
-          // this.centerDialogVisible = true
+           this.$message({
+							showClose: true,
+							message:res.message,
+							type: 'success'
+						});
+          this.selectUserInfo()
           console.log(res.data)
-          // this.userMsg.name = res.data.name
-          // this.userMsg.id = res.data.id
-          // this.userMsg.money = res.data.money + '元'
+          
         } else {
           this.$message({
             showClose: true,
@@ -200,14 +222,65 @@ export default {
         this.loading = false
       })
     },
-    handleEdit(index, row) {
-      console.log(index, row)
+    // 重置密码操作
+    resetPwd(id) {
+      this.centerDialogVisible = true
+      this.userMsg.uid=id
     },
-    handleDelete(index, row) {
-      console.log(index, row)
+    //点击修改等级确定按钮
+    modifyLv(id) {
+      this.gradeDialogVisible = true
+      this.lvform.uid=id
     },
-    handleLook(index, row) {
-      console.log(index, row)
+    //点击确定修改等级
+    gradesubmit(){
+      this.gradeDialogVisible=false
+      API.modifyLv(this.lvform).then(res => {
+        if (res.code === 200) {
+          this.$message({
+							showClose: true,
+							message:res.message,
+							type: 'success'
+						});
+          console.log(res.data)
+          this.selectUserInfo()
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.loading = false
+      })
+    },
+    //点击充值
+    rechargeAmount(id) {
+      this.rechargeDialogVisible = true
+      this.rechargeform.uid=id
+    },
+    rechargesubmit(){
+      this.rechargeDialogVisible=false
+      API.rechargeAmount(this.rechargeform).then(res => {
+        if (res.code === 200) {
+          this.$message({
+							showClose: true,
+							message:res.message,
+							type: 'success'
+						});
+          console.log(res.data)
+          this.selectUserInfo()
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.loading = false
+      })
     },
     handleSizeChange(val) {
       this.form.size = val

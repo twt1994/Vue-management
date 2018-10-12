@@ -46,7 +46,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间"/>
-      <el-table-column prop="" label="操作"/>
+      <el-table-column label="操作">
+          <template slot-scope="scope">
+             <span style="color:blue;cursor:pointer" @click="selectById(scope.row.id)">查看</span>
+          </template>
+      </el-table-column>
     </el-table>
     <div class="block" style="margin-top:50px;text-align: right;">
       <el-pagination
@@ -59,6 +63,67 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
+     <!-- 查看弹窗 -->
+    <el-dialog :visible.sync="lookDialogVisible" @close="lookcloseDialog">
+      <el-form ref="addJson">
+				<el-form-item prop='orderNumber' label="订单编号:" :label-width="formLabelWidth">
+					<span>{{detailData.orderNumber}}</span>
+				</el-form-item>
+
+				<el-form-item prop='site' label="站点:" :label-width="formLabelWidth">
+					<span>{{detailData.site}}</span>
+				</el-form-item>
+
+				<el-form-item prop='ASIN' label="ASIN:" :label-width="formLabelWidth">
+					<span>{{detailData.asin}}</span>
+				</el-form-item>
+
+				<el-form-item prop='ASIN' label="原价($):" :label-width="formLabelWidth">
+					<span>{{detailData.price}}</span>
+				</el-form-item>
+
+				<el-form-item prop='ASIN' label="汇率:" :label-width="formLabelWidth">
+					<span>{{detailData.exchangeRate}}</span>
+				</el-form-item>
+
+				<el-form-item prop='ASIN' label="佣金费:" :label-width="formLabelWidth">
+					<span>{{detailData.commission}}</span>
+				</el-form-item>
+
+				<el-form-item prop='totalPrice' label="总价:" :label-width="formLabelWidth">
+					<span>{{detailData.totalPrice}}</span>
+				</el-form-item>
+
+				<el-form-item prop='networkNumber' label="官网单号:" :label-width="formLabelWidth">
+					<span>{{detailData.networkNumber?detailData.networkNumber:'-'}}</span>
+				</el-form-item>
+
+				<el-form-item prop='logisticsNumber' label="物流单号:" :label-width="formLabelWidth">
+					<span>{{detailData.logisticsNumber?detailData.logisticsNumber:'-'}}</span>
+				</el-form-item>
+
+				<el-form-item prop='ASIN' label="状态:" :label-width="formLabelWidth">
+						<span v-if="detailData.state == -1">全部</span>
+						<span v-if="detailData.state == 0">待付款</span>
+						<span v-if="detailData.state == 1">待审核 </span>
+						<span v-if="detailData.state == 2">交易成功</span>
+						<span v-if="detailData.state == 3">驳回</span>
+						<span v-if="detailData.state == 4">用户取消订单</span>
+				</el-form-item>
+
+				<el-form-item prop='ASIN' label="创建时间:" :label-width="formLabelWidth">
+					<span>{{detailData.createTime}}</span>
+				</el-form-item>
+
+				<el-form-item prop='reject' label="驳回原因:" :label-width="formLabelWidth">
+					<span>{{detailData.reject?detailData.reject:'-'}}</span>
+				</el-form-item>
+
+			</el-form>
+      <div slot="footer" style="text-align:center">
+				<el-button type="primary" @click="looksubmit">确 定</el-button>
+			</div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -77,6 +142,9 @@ export default {
         state: '-1',
         startTime: ''
       },
+      detailData: {},
+      formLabelWidth: '80px',
+      lookDialogVisible:false,
       activeIndex: '-1',
       options: [
         {
@@ -124,6 +192,9 @@ export default {
           label: '澳大利亚'
         }
       ],
+      lookform:{
+        id:''
+      },
       // value: '1',
       total: 0,
       tableData: [
@@ -154,6 +225,36 @@ export default {
 											time.getMinutes() + ':' +
 											time.getSeconds()
           })
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.loading = false
+      })
+    },
+    lookcloseDialog(){
+
+    },
+    looksubmit(){
+      this.lookDialogVisible=false;
+    },
+    selectById(id) {
+      this.lookDialogVisible = true
+      this.lookform.id=id
+      API.selectById(this.lookform).then(res => {
+        if (res.code === 200) {
+          this.detailData = res.data
+          this.$message({
+							showClose: true,
+							message:res.message,
+							type: 'success'
+						});
+          console.log(res.data)
+          this.selectGoodsOrder()
         } else {
           this.$message({
             showClose: true,

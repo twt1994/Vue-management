@@ -44,15 +44,6 @@ const API = {
       //          load:true
     })
   },
-  // 提现列表
-  selectPutForward: (data) => {
-    return request({
-      url: '/rechargeRecord/selectPutForward ',
-      method: 'post',
-      data: data
-      //          load:true
-    })
-  },
   // 查看交易记录/前台/后台
   selectGoodsOrder: (data) => {
     return request({
@@ -75,6 +66,60 @@ const API = {
   resetPwd: (data) => {
     return request({
       url: '/userInfo/resetPwd ',
+      method: 'post',
+      data: data
+      //          load:true
+    })
+  },
+  // 修改等级
+  modifyLv: (data) => {
+    return request({
+      url: '/userInfo/modifyLv',
+      method: 'post',
+      data: data
+      //          load:true
+    })
+  },
+  // 充值余额后台
+  rechargeAmount: (data) => {
+    return request({
+      url: '/rechargeRecord/rechargeAmount  ',
+      method: 'post',
+      data: data
+      //          load:true
+    })
+  },
+  // 按照id查询查看
+  selectById: (data) => {
+    return request({
+      url: '/goodsOrder/selectById   ',
+      method: 'post',
+      data: data
+      //          load:true
+    })
+  },
+  // 提现申请后台列表
+  selectPutForward: (data) => {
+    return request({
+      url: '/rechargeRecord/selectPutForward    ',
+      method: 'post',
+      data: data
+      //          load:true
+    })
+  },
+   // 提现申请通过，后台
+   putForwardAdopt: (data) => {
+    return request({
+      url: '/rechargeRecord/putForwardAdopt',
+      method: 'post',
+      data: data
+      //          load:true
+    })
+  },
+   // 提现申请驳回，后台
+   putForwardReject: (data) => {
+    return request({
+      url: '/rechargeRecord/putForwardReject ',
       method: 'post',
       data: data
       //          load:true
