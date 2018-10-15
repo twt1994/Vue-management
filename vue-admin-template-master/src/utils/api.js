@@ -125,6 +125,33 @@ const API = {
       //          load:true
     })
   },
+  //审核商品列表后台
+  selectExamineList: (data) => {
+    return request({
+      url: '/goodsOrder/selectExamineList',
+      method: 'post',
+      data: data
+      //          load:true
+    })
+  },
+ //审核商品列表通过
+ adoptGoodsOrder: (param) => {
+  return request({
+    url: '/goodsOrder/adoptGoodsOrder ',
+    method: 'post',
+    data: {param:param}
+    //          load:true
+  })
+},
+ //审核商品列表驳回
+ rejectGoodsOrder: (data) => {
+  return request({
+    url: '/goodsOrder/rejectGoodsOrder ',
+    method: 'post',
+    data: data
+    //          load:true
+  })
+},
   // 获取用户信息 成功
   getUserInfo: (data) => {
     return request({
