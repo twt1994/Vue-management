@@ -14,11 +14,17 @@
         clearable
         style="width:200px;margin-right:30px;"/>
       站点:&nbsp;<el-select v-model="form.site">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"/>
+          <el-option label="全部" value=""/>
+            <el-option label="美国" value="美国"/>
+            <el-option label="加拿大" value="加拿大"/>
+            <el-option label="墨西哥" value="墨西哥"/>
+            <el-option label="英国" value="英国"/>
+            <el-option label="法国" value="法国"/>
+            <el-option label="西班牙" value="西班牙"/>
+            <el-option label="德国" value="德国"/>
+            <el-option label="意大利" value="意大利"/>
+            <el-option label="日本" value="日本"/>
+            <el-option label="澳大利亚" value="澳大利亚"/>
       </el-select>
       <el-button type="primary" style="margin-left:30px;" @click="selectGoodsOrder">搜索</el-button>
     </div>
@@ -138,7 +144,7 @@ export default {
         orderNumber: '',
         asin: '',
         uid: '6',
-        site: '全部',
+        site: '',
         state: '-1',
         startTime: ''
       },

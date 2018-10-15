@@ -53,6 +53,7 @@
       </el-table-column>
       <el-table-column prop="state" label="状态">
         <template slot-scope="scope">
+           <!-- <span v-if="scope.row.state == -1">全部 </span> -->
           <span v-if="scope.row.state == 1">待审核 </span>
           <span v-if="scope.row.state == 2">审核成功</span>
           <span v-if="scope.row.state == 3">驳回</span>
@@ -62,14 +63,14 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
            <span v-if="scope.row.state == 2 ||scope.row.state == 3"style="color:blue;cursor:pointer" @click="selectById(scope.row.id)">查看</span>
-           <span v-if="scope.row.state == 1" style="color:blue;cursor:pointer" @click="adoptGoodsOrder(scope.row.id)">通过</span>
+           <span v-if="scope.row.state == 1" style="color:blue;cursor:pointer" @click="adoptGoodsOrder(scope.row.id,0)">通过</span>
            <span v-if="scope.row.state == 2 ||scope.row.state == 1" style="color:blue;cursor:pointer" @click="rejectGoodsOrder(scope.row.id)">驳回</span>
           
         </template>
       </el-table-column>
     </el-table>
-     <!-- <el-button style="margin-top:40px;margin-left:30px;" @click="adoptGoodsOrder(multipleSelection)">批量通过订单</el-button> -->
-     <el-pagination :current-page="tradeRecordForm.current" class="pagination" :page-sizes="[30, 50, 100, 200]" @size-change="handleSizeChange" :page-size="tradeRecordForm.size" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper" :total="total"/>\
+     <el-button style="margin-top:40px;margin-left:30px;" @click="adoptGoodsOrder(multipleSelection,1)">批量通过订单</el-button>
+     <el-pagination :current-page="tradeRecordForm.current" class="pagination" :page-sizes="[30, 50, 100, 200]" @size-change="handleSizeChange" :page-size="tradeRecordForm.size" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper" :total="total"/>
       <!-- 驳回弹窗 -->
       <el-dialog :visible.sync="rejectVisible" @close="rejectDialog">
        输入驳回原因:&nbsp;<el-input
@@ -151,7 +152,7 @@ export default {
   data() {
     return {
       tradeRecordForm: {
-        state: -1,
+        state:'-1',
         keyword: '',
         orderNumber: '',
         asin: '',
@@ -160,7 +161,7 @@ export default {
         current: 1,
         size: 10
       },
-      activeIndex: '1',
+      activeIndex: '-1',
       total: 0,
       detailData: {},
       multipleSelection: [],
@@ -206,13 +207,16 @@ export default {
       })
     },
     //审核商品通过
-    adoptGoodsOrder(param) {
-      var obj ={ "id":param}
-      console.log(obj,1111111111111)
+    adoptGoodsOrder(param,state) {
       var arr=[]
-        arr.push(JSON.stringify(obj))
-        console.log(arr,9999999999)
-      API.adoptGoodsOrder(arr).then(res => {
+      if(state==0){
+        var obj ={ "id":param}
+        console.log(obj,1111111111111)
+        arr.push(obj)
+      }else{
+        arr = param;
+      }
+      API.adoptGoodsOrder(JSON.stringify(arr)).then(res => {
         if (res.code == 200) {
           this.$message({
             showClose: true,
@@ -291,13 +295,14 @@ export default {
       })
     },
      // 点击选中某一条数据
-    // changeChose(id, e) {
-    //   if (e.target.checked) {
-    //     this.multipleSelection.push(id)
-    //   } else {
-    //     this.multipleSelection.splice(this.multipleSelection.indexOf(id), 1)
-    //   }
-    // },
+    changeChose(id, e) {
+      let param = {"id":id};
+      if (e.target.checked) {
+        this.multipleSelection.push(param)
+      } else {
+        this.multipleSelection.splice(this.multipleSelection.indexOf(id),1)
+      }
+    },
      // 点击页码跳转
     handleCurrentChange(val) {
       this.tradeRecordForm.current = val
