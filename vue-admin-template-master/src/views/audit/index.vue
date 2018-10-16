@@ -1,34 +1,34 @@
 
 <template>
   <div class="audit-container">
-      <el-form ref="tradeRecordForm" :model="tradeRecordForm" label-width="80px" @keyup.enter.native="selectExamineList">
-        <el-form-item label="关键字">
-          <el-input v-model="tradeRecordForm.keyword"/>
-        </el-form-item>
-        <el-form-item label="订单编号">
-          <el-input v-model="tradeRecordForm.orderNumber"/>
-        </el-form-item>
-        <el-form-item label="ASIN">
-          <el-input v-model="tradeRecordForm.asin"/>
-        </el-form-item>
-        <el-form-item label="站点">
-          <el-select v-model="tradeRecordForm.site" placeholder="请选择站点">
-            <el-option label="全部" value=""/>
-            <el-option label="美国" value="美国"/>
-            <el-option label="加拿大" value="加拿大"/>
-            <el-option label="墨西哥" value="墨西哥"/>
-            <el-option label="英国" value="英国"/>
-            <el-option label="法国" value="法国"/>
-            <el-option label="西班牙" value="西班牙"/>
-            <el-option label="德国" value="德国"/>
-            <el-option label="意大利" value="意大利"/>
-            <el-option label="日本" value="日本"/>
-            <el-option label="澳大利亚" value="澳大利亚"/>
-          </el-select>
-        </el-form-item>
-        <el-button style="margin-left:20px;" type="primary" @click="selectExamineList">查询</el-button>
-      </el-form>
-      <!--选项卡-->
+    <el-form ref="tradeRecordForm" :model="tradeRecordForm" label-width="80px" @keyup.enter.native="selectExamineList">
+      <el-form-item label="关键字">
+        <el-input v-model="tradeRecordForm.keyword"/>
+      </el-form-item>
+      <el-form-item label="订单编号">
+        <el-input v-model="tradeRecordForm.orderNumber"/>
+      </el-form-item>
+      <el-form-item label="ASIN">
+        <el-input v-model="tradeRecordForm.asin"/>
+      </el-form-item>
+      <el-form-item label="站点">
+        <el-select v-model="tradeRecordForm.site" placeholder="请选择站点">
+          <el-option label="全部" value=""/>
+          <el-option label="美国" value="美国"/>
+          <el-option label="加拿大" value="加拿大"/>
+          <el-option label="墨西哥" value="墨西哥"/>
+          <el-option label="英国" value="英国"/>
+          <el-option label="法国" value="法国"/>
+          <el-option label="西班牙" value="西班牙"/>
+          <el-option label="德国" value="德国"/>
+          <el-option label="意大利" value="意大利"/>
+          <el-option label="日本" value="日本"/>
+          <el-option label="澳大利亚" value="澳大利亚"/>
+        </el-select>
+      </el-form-item>
+      <el-button style="margin-left:20px;" type="primary" @click="selectExamineList">查询</el-button>
+    </el-form>
+    <!--选项卡-->
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <el-menu-item index="-1">所有订单</el-menu-item>
       <el-menu-item index="1">待审核</el-menu-item>
@@ -36,7 +36,7 @@
       <el-menu-item index="3">驳回 </el-menu-item>
       <!--<el-menu-item index="4">用户取消订单 </el-menu-item>-->
     </el-menu>
-     <!--表格-->
+    <!--表格-->
     <el-table :data="tableData" style="width:100%;border-right:1px solid #eee;">
       <el-table-column prop="orderNumber" label="">
         <template slot-scope="scope">
@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column prop="state" label="状态">
         <template slot-scope="scope">
-           <!-- <span v-if="scope.row.state == -1">全部 </span> -->
+          <!-- <span v-if="scope.row.state == -1">全部 </span> -->
           <span v-if="scope.row.state == 1">待审核 </span>
           <span v-if="scope.row.state == 2">审核成功</span>
           <span v-if="scope.row.state == 3">驳回</span>
@@ -63,97 +63,100 @@
       <el-table-column prop="createTime" label="创建时间"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
-           <span v-if="scope.row.state == 2 ||scope.row.state == 3"style="color:blue;cursor:pointer" @click="selectById(scope.row.id)">查看</span>
-           <span v-if="scope.row.state == 1" style="color:blue;cursor:pointer" @click="adoptGoodsOrder(scope.row.id,0)">通过</span>
-           <span v-if="scope.row.state == 2" style="color:blue;cursor:pointer" @click="modifyLogistics(scope.row.id,scope.row.networkNumber,scope.row.logisticsNumber)">修改订单</span>
-           <span v-if="scope.row.state == 2 ||scope.row.state == 1" style="color:blue;cursor:pointer" @click="rejectGoodsOrder(scope.row.id)">驳回</span>
-          
+          <span v-if="scope.row.state == 2 ||scope.row.state == 3"style="color:blue;cursor:pointer" @click="selectById(scope.row.id)">查看</span>
+          <span v-if="scope.row.state == 1" style="color:blue;cursor:pointer" @click="adoptGoodsOrder(scope.row.id,0)">通过</span>
+          <<<<<<< HEAD
+          <span v-if="scope.row.state == 2" style="color:blue;cursor:pointer" @click="modifyLogistics(scope.row.id,scope.row.networkNumber,scope.row.logisticsNumber)">修改订单</span>
+          =======
+          >>>>>>> 77f7d518e8e452c6a91d3765e930f57f536fe320
+          <span v-if="scope.row.state == 2 ||scope.row.state == 1" style="color:blue;cursor:pointer" @click="rejectGoodsOrder(scope.row.id)">驳回</span>
+
         </template>
       </el-table-column>
     </el-table>
-     <el-button style="margin-top:40px;margin-left:30px;" @click="adoptGoodsOrder(multipleSelection,1)">批量通过订单</el-button>
-     <el-pagination :current-page="tradeRecordForm.current" class="pagination" :page-sizes="[30, 50, 100, 200]" @size-change="handleSizeChange" :page-size="tradeRecordForm.size" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper" :total="total"/>
-      <!-- 驳回弹窗 -->
-      <el-dialog :visible.sync="rejectVisible" @close="rejectDialog">
-       输入驳回原因:&nbsp;<el-input
+    <el-button style="margin-top:40px;margin-left:30px;" @click="adoptGoodsOrder(multipleSelection,1)">批量通过订单</el-button>
+    <el-pagination :current-page="tradeRecordForm.current" :page-sizes="[30, 50, 100, 200]" :page-size="tradeRecordForm.size" class="pagination" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange"/>
+    <!-- 驳回弹窗 -->
+    <el-dialog :visible.sync="rejectVisible" @close="rejectDialog">
+      输入驳回原因:&nbsp;<el-input
         v-model="rejectform.msg"
         style="width:500px;margin-right:30px;"/>
       <div slot="footer" style="text-align:center">
-				<el-button type="primary" @click="rejectsubmit">确 定</el-button>
-			</div>
+        <el-button type="primary" @click="rejectsubmit">确 定</el-button>
+      </div>
     </el-dialog>
-     <!-- 修改物流单号弹窗 -->
-      <el-dialog :visible.sync="numberVisible" @close="numberDialog">
-       官网单号:&nbsp;<el-input
+    <!-- 修改物流单号弹窗 -->
+    <el-dialog :visible.sync="numberVisible" @close="numberDialog">
+      官网单号:&nbsp;<el-input
         v-model="numberform.networkNumber"
         style="width:500px;"/>
-        物流单号:&nbsp;<el-input
+      物流单号:&nbsp;<el-input
         v-model="numberform.logisticsNumber"
         style="width:500px;"/>
       <div slot="footer" style="text-align:center">
-				<el-button type="primary" @click="numbersubmit">确 定</el-button>
-			</div>
+        <el-button type="primary" @click="numbersubmit">确 定</el-button>
+      </div>
     </el-dialog>
-     <!-- 查看弹窗 -->
+    <!-- 查看弹窗 -->
     <el-dialog :visible.sync="lookDialogVisible" @close="lookcloseDialog">
       <el-form ref="addJson">
-				<el-form-item prop='orderNumber' label="订单编号:" :label-width="formLabelWidth">
-					<span>{{detailData.orderNumber}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="orderNumber" label="订单编号:">
+          <span>{{ detailData.orderNumber }}</span>
+        </el-form-item>
 
-				<el-form-item prop='site' label="站点:" :label-width="formLabelWidth">
-					<span>{{detailData.site}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="site" label="站点:">
+          <span>{{ detailData.site }}</span>
+        </el-form-item>
 
-				<el-form-item prop='ASIN' label="ASIN:" :label-width="formLabelWidth">
-					<span>{{detailData.asin}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="ASIN" label="ASIN:">
+          <span>{{ detailData.asin }}</span>
+        </el-form-item>
 
-				<el-form-item prop='ASIN' label="原价($):" :label-width="formLabelWidth">
-					<span>{{detailData.price}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="ASIN" label="原价($):">
+          <span>{{ detailData.price }}</span>
+        </el-form-item>
 
-				<el-form-item prop='ASIN' label="汇率:" :label-width="formLabelWidth">
-					<span>{{detailData.exchangeRate}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="ASIN" label="汇率:">
+          <span>{{ detailData.exchangeRate }}</span>
+        </el-form-item>
 
-				<el-form-item prop='ASIN' label="佣金费:" :label-width="formLabelWidth">
-					<span>{{detailData.commission}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="ASIN" label="佣金费:">
+          <span>{{ detailData.commission }}</span>
+        </el-form-item>
 
-				<el-form-item prop='totalPrice' label="总价:" :label-width="formLabelWidth">
-					<span>{{detailData.totalPrice}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="totalPrice" label="总价:">
+          <span>{{ detailData.totalPrice }}</span>
+        </el-form-item>
 
-				<el-form-item prop='networkNumber' label="官网单号:" :label-width="formLabelWidth">
-					<span>{{detailData.networkNumber?detailData.networkNumber:'-'}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="networkNumber" label="官网单号:">
+          <span>{{ detailData.networkNumber?detailData.networkNumber:'-' }}</span>
+        </el-form-item>
 
-				<el-form-item prop='logisticsNumber' label="物流单号:" :label-width="formLabelWidth">
-					<span>{{detailData.logisticsNumber?detailData.logisticsNumber:'-'}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="logisticsNumber" label="物流单号:">
+          <span>{{ detailData.logisticsNumber?detailData.logisticsNumber:'-' }}</span>
+        </el-form-item>
 
-				<el-form-item prop='ASIN' label="状态:" :label-width="formLabelWidth">
-						<span v-if="detailData.state == -1">全部</span>
-						<span v-if="detailData.state == 0">待付款</span>
-						<span v-if="detailData.state == 1">待审核 </span>
-						<span v-if="detailData.state == 2">交易成功</span>
-						<span v-if="detailData.state == 3">驳回</span>
-						<span v-if="detailData.state == 4">用户取消订单</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="ASIN" label="状态:">
+          <span v-if="detailData.state == -1">全部</span>
+          <span v-if="detailData.state == 0">待付款</span>
+          <span v-if="detailData.state == 1">待审核 </span>
+          <span v-if="detailData.state == 2">交易成功</span>
+          <span v-if="detailData.state == 3">驳回</span>
+          <span v-if="detailData.state == 4">用户取消订单</span>
+        </el-form-item>
 
-				<el-form-item prop='ASIN' label="创建时间:" :label-width="formLabelWidth">
-					<span>{{detailData.createTime}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="ASIN" label="创建时间:">
+          <span>{{ detailData.createTime }}</span>
+        </el-form-item>
 
-				<el-form-item prop='reject' label="驳回原因:" :label-width="formLabelWidth">
-					<span>{{detailData.reject?detailData.reject:'-'}}</span>
-				</el-form-item>
+        <el-form-item :label-width="formLabelWidth" prop="reject" label="驳回原因:">
+          <span>{{ detailData.reject?detailData.reject:'-' }}</span>
+        </el-form-item>
 
-			</el-form>
+      </el-form>
       <div slot="footer" style="text-align:center">
-				<el-button type="primary" @click="looksubmit">确 定</el-button>
-			</div>
+        <el-button type="primary" @click="looksubmit">确 定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -166,7 +169,7 @@ export default {
   data() {
     return {
       tradeRecordForm: {
-        state:'-1',
+        state: '-1',
         keyword: '',
         orderNumber: '',
         asin: '',
@@ -180,21 +183,21 @@ export default {
       detailData: {},
       multipleSelection: [],
       tableData: [],
-      rejectVisible:false,
-      lookDialogVisible:false,
-      numberVisible:false,
-      lookform:{
-        id:''
+      rejectVisible: false,
+      lookDialogVisible: false,
+      numberVisible: false,
+      lookform: {
+        id: ''
       },
       formLabelWidth: '80px',
-       rejectform:{
-          id:'',
-          msg:''
+      rejectform: {
+        id: '',
+        msg: ''
       },
-      numberform:{
-        id:'',
-        networkNumber:'',
-        logisticsNumber:''
+      numberform: {
+        id: '',
+        networkNumber: '',
+        logisticsNumber: ''
       }
     }
   },
@@ -207,7 +210,7 @@ export default {
       this.tradeRecordForm.state = key
       this.selectExamineList()
     },
-     selectExamineList() {
+    selectExamineList() {
       const loginData = JSON.parse(getLoginData())
       this.tradeRecordForm.uid = loginData.id
       API.selectExamineList(this.tradeRecordForm).then(res => {
@@ -226,15 +229,15 @@ export default {
         }
       })
     },
-    //审核商品通过
-    adoptGoodsOrder(param,state) {
-      var arr=[]
-      if(state==0){
-        var obj ={ "id":param}
-        console.log(obj,1111111111111)
+    // 审核商品通过
+    adoptGoodsOrder(param, state) {
+      var arr = []
+      if (state == 0) {
+        var obj = { 'id': param }
+        console.log(obj, 1111111111111)
         arr.push(obj)
-      }else{
-        arr = param;
+      } else {
+        arr = param
       }
       API.adoptGoodsOrder(JSON.stringify(arr)).then(res => {
         if (res.code == 200) {
@@ -253,23 +256,23 @@ export default {
         }
       })
     },
-    rejectDialog(){
-      this.rejectform.msg=''
+    rejectDialog() {
+      this.rejectform.msg = ''
     },
-    rejectGoodsOrder(id){
-       this.rejectVisible = true
-      this.rejectform.id=id
+    rejectGoodsOrder(id) {
+      this.rejectVisible = true
+      this.rejectform.id = id
     },
-    //驳回商品
-    rejectsubmit(){
-       this.rejectVisible=false
+    // 驳回商品
+    rejectsubmit() {
+      this.rejectVisible = false
       API.rejectGoodsOrder(this.rejectform).then(res => {
         if (res.code === 200) {
           this.$message({
-							showClose: true,
-							message:res.message,
-							type: 'success'
-						});
+            showClose: true,
+            message: res.message,
+            type: 'success'
+          })
           console.log(res.data)
           this.selectExamineList()
         } else {
@@ -283,14 +286,14 @@ export default {
         this.loading = false
       })
     },
-    //修改订单
-    modifyLogistics(id,networkNumber,logisticsNumber){
-      this.numberform.id=id
-      this.numberform.networkNumber=networkNumber
-      this.numberform.logisticsNumber=logisticsNumbe
+    // 修改订单
+    modifyLogistics(id, networkNumber, logisticsNumber) {
+      this.numberform.id = id
+      this.numberform.networkNumber = networkNumber
+      this.numberform.logisticsNumber = logisticsNumbe
     },
-    numbersubmit(id,networkNumber,logisticsNumber) {
-      this.numberVisible = false;
+    numbersubmit(id, networkNumber, logisticsNumber) {
+      this.numberVisible = false
       // this.numberform.id=id
       // this.numberform.networkNumber=networkNumber
       // this.numberform.logisticsNumber=logisticsNumber
@@ -300,10 +303,10 @@ export default {
           // this.numberform.networkNumber =res.data.records.networkNumber;
           //  this.numberform.logisticsNumber=res.data.records.logisticsNumber;
           this.$message({
-							showClose: true,
-							message:res.message,
-							type: 'success'
-						});
+            showClose: true,
+            message: res.message,
+            type: 'success'
+          })
           console.log(res.data)
           this.selectExamineList()
         } else {
@@ -317,26 +320,26 @@ export default {
         this.loading = false
       })
     },
-    numberDialog(){
+    numberDialog() {
       // this.numberVisible=false;
     },
-    //查看
-    lookcloseDialog(){
+    // 查看
+    lookcloseDialog() {
     },
-    looksubmit(){
-      this.lookDialogVisible=false;
+    looksubmit() {
+      this.lookDialogVisible = false
     },
     selectById(id) {
       this.lookDialogVisible = true
-      this.lookform.id=id
+      this.lookform.id = id
       API.selectById(this.lookform).then(res => {
         if (res.code === 200) {
           this.detailData = res.data
           this.$message({
-							showClose: true,
-							message:res.message,
-							type: 'success'
-						});
+            showClose: true,
+            message: res.message,
+            type: 'success'
+          })
           console.log(res.data)
           this.selectExamineList()
         } else {
@@ -350,16 +353,16 @@ export default {
         this.loading = false
       })
     },
-     // 点击选中某一条数据
+    // 点击选中某一条数据
     changeChose(id, e) {
-      let param = {"id":id};
+      const param = { 'id': id }
       if (e.target.checked) {
         this.multipleSelection.push(param)
       } else {
-        this.multipleSelection.splice(this.multipleSelection.indexOf(id),1)
+        this.multipleSelection.splice(this.multipleSelection.indexOf(id), 1)
       }
     },
-     // 点击页码跳转
+    // 点击页码跳转
     handleCurrentChange(val) {
       this.tradeRecordForm.current = val
       this.selectExamineList()
