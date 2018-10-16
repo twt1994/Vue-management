@@ -65,10 +65,7 @@
         <template slot-scope="scope">
           <span v-if="scope.row.state == 2 ||scope.row.state == 3"style="color:blue;cursor:pointer" @click="selectById(scope.row.id)">查看</span>
           <span v-if="scope.row.state == 1" style="color:blue;cursor:pointer" @click="adoptGoodsOrder(scope.row.id,0)">通过</span>
-          <<<<<<< HEAD
           <span v-if="scope.row.state == 2" style="color:blue;cursor:pointer" @click="modifyLogistics(scope.row.id,scope.row.networkNumber,scope.row.logisticsNumber)">修改订单</span>
-          =======
-          >>>>>>> 77f7d518e8e452c6a91d3765e930f57f536fe320
           <span v-if="scope.row.state == 2 ||scope.row.state == 1" style="color:blue;cursor:pointer" @click="rejectGoodsOrder(scope.row.id)">驳回</span>
 
         </template>
@@ -288,11 +285,12 @@ export default {
     },
     // 修改订单
     modifyLogistics(id, networkNumber, logisticsNumber) {
+      this.numberVisible = true
       this.numberform.id = id
       this.numberform.networkNumber = networkNumber
-      this.numberform.logisticsNumber = logisticsNumbe
+      this.numberform.logisticsNumber = logisticsNumber
     },
-    numbersubmit(id, networkNumber, logisticsNumber) {
+    numbersubmit() {
       this.numberVisible = false
       // this.numberform.id=id
       // this.numberform.networkNumber=networkNumber

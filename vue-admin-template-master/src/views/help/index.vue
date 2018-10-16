@@ -1,12 +1,13 @@
 <template>
   <div class="helpCointer">
     <div class="edit">
-      <Tinymce ref="editor" :height="500" v-model="formLabelAlign.content" />
+      <Tinymce ref="editor" :height="500" v-model="formLabelAlign.msg" />
     </div>
-    <el-button style="margin-top:30px;" type="primary">提交</el-button>
+    <el-button style="margin-top:30px;" type="primary" @click="submit">提交</el-button>
   </div>
 </template>
 <script>
+import API from '@/utils/api'
 import Tinymce from '@/components/Tinymce' // 调用编辑器
 export default {
   components: {
@@ -18,13 +19,44 @@ export default {
       formLabelAlign: {
         id: '',
         type: 'day',
-        content: ''
+        msg: ''
       }
     }
+  },
+  mounted(){
+    //  this.modifyHelpConfig()
   },
   computed: {
     editor() {
       return this.$refs.myTextEditor.Tinymce
+    }
+  },
+  methods:{
+    modifyHelpConfig() {
+      API.modifyHelpConfig(this.formLabelAlign).then(res => {
+        if (res.code === 200) {
+          console.log(res.data)
+          // this.formLabelAlign.msg=''
+          this.$message({
+            showClose: true,
+            message: res.message,
+            type: 'success'
+          })
+           this.formLabelAlign.msg=''
+        }else{
+         this.$message({
+            showClose: true,
+            message: res.message,
+            type: 'warning'
+          }) 
+        }
+      }).catch(() => {
+        this.loading = false
+      })
+    },
+    submit(){
+         this.modifyHelpConfig()
+        //  this.formLabelAlign.msg=''
     }
   }
 }

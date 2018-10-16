@@ -209,7 +209,7 @@ modifyLogistics: (data) => {
   // 修改帮助/后台
   modifyHelpConfig: (data) => {
     return request({
-      url: '/helpConfig/modifyHelpConfig    ',
+      url: '/helpConfig/modifyHelpConfig',
       method: 'post',
       data: data
     //          load:true

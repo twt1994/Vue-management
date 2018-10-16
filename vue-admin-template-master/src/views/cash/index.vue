@@ -18,7 +18,7 @@
       </el-form>
     </div>
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="0">全部</el-menu-item>
+      <el-menu-item index="0">充值成功</el-menu-item>
       <el-menu-item index="1">待审核</el-menu-item>
       <el-menu-item index="2">审核通过 </el-menu-item>
       <el-menu-item index="3">驳回 </el-menu-item>
@@ -98,7 +98,7 @@ export default {
         size: 10,
         id: '',
         uname: '',
-        status: '1',
+        status: '0',
         startTime: '2018-7-30 00:00:00',
         endTime: '2018-9-30 00:00:00'
       },
