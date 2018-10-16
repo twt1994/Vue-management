@@ -1,14 +1,13 @@
 <template>
   <div class="app-container">
-    <div class="cash">
-      <div class="box">
-        <span style="margin-top:10px;">用户名:&nbsp;&nbsp;</span>
-        <el-input
-          v-model = "form.uname"
-          placeholder ="请输入用户名"
-          clearable
-          style="width:200px;margin-right:30px;"/>
-        <el-form ref="form" :model="form" label-width="80px" style="display:flex;">
+    <div class="box" style="display:flex;margin-top:30px;">
+      <span style="margin-top:10px;">用户名:&nbsp;&nbsp;</span>
+      <el-input
+        v-model = "form.uname"
+        placeholder ="请输入用户名"
+        clearable
+        style="width:200px;margin-right:30px;"/>
+      <el-form ref="form" :model="form" label-width="80px" style="display:flex;">
         <el-form-item label="开始时间">
           <el-date-picker v-model="form.startTime" type="datetime" placeholder="选择日期" value-format="yyyy-MM-dd HH:mm:ss" @change="selectPutForward"/>
         </el-form-item>
@@ -16,8 +15,9 @@
           <el-date-picker v-model="form.endTime" type="datetime" placeholder="选择日期" value-format="yyyy-MM-dd HH:mm:ss" @change="selectPutForward"/>
         </el-form-item>
         <el-button type="primary" style="margin-bottom:22px;margin-left:30px;" @click="selectPutForward">搜索</el-button>
-       </el-form>
-      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+      </el-form>
+    </div>
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <el-menu-item index="0">全部</el-menu-item>
       <el-menu-item index="1">待审核</el-menu-item>
       <el-menu-item index="2">审核通过 </el-menu-item>
@@ -57,44 +57,43 @@
             <span>{{ scope.row.createTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="type" label="操作" v-if="isshow">
-				<template slot-scope="scope">
-					<span  @click="putForwardAdopt(scope.row.id)" style="color:blue;cursor:pointer">通过</span>
-					<span  @click="putForwardReject(scope.row.id)" style="color:blue;cursor:pointer">驳回</span>
-				</template>
-			</el-table-column>
+        <el-table-column v-if="isshow" prop="type" label="操作">
+          <template slot-scope="scope">
+            <span style="color:blue;cursor:pointer" @click="putForwardAdopt(scope.row.id)">通过</span>
+            <span style="color:blue;cursor:pointer" @click="putForwardReject(scope.row.id)">驳回</span>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
-        <div class="block" style="margin-top:50px;text-align: right;">
-          <el-pagination
-            :current-page="form.current"
-            :page-sizes="[30, 50, 100, 200]"
-            :page-size="form.size"
-            :total="total"
-            class="pagination"
-            layout="total, sizes, prev, pager, next, jumper"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"/>
-        </div>
-      </div>
-      <!-- 驳回弹窗 -->
-      <el-dialog :visible.sync="rejectVisible" @close="rejectDialog">
-       输入驳回原因:&nbsp;<el-input
+    <div class="block" style="margin-top:50px;text-align: right;">
+      <el-pagination
+        :current-page="form.current"
+        :page-sizes="[30, 50, 100, 200]"
+        :page-size="form.size"
+        :total="total"
+        class="pagination"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
+    </div>
+    <!-- 驳回弹窗 -->
+    <el-dialog :visible.sync="rejectVisible" @close="rejectDialog">
+      输入驳回原因:&nbsp;<el-input
         v-model="rejectform.msg"
         style="width:500px;margin-right:30px;"/>
       <div slot="footer" style="text-align:center">
-				<el-button type="primary" @click="rejectsubmit">确 定</el-button>
-			</div>
+        <el-button type="primary" @click="rejectsubmit">确 定</el-button>
+      </div>
     </el-dialog>
-    </div>
   </div>
+
 </template>
 <script>
 import API from '@/utils/api'
 export default {
   data() {
     return {
-      form:{
+      form: {
         current: 1,
         size: 10,
         id: '',
@@ -103,22 +102,22 @@ export default {
         startTime: '2018-7-30 00:00:00',
         endTime: '2018-9-30 00:00:00'
       },
-      passform:{
-        id:''
+      passform: {
+        id: ''
       },
-      rejectform:{
-          id:'',
-          msg:''
+      rejectform: {
+        id: '',
+        msg: ''
       },
-      rejectVisible:false,
+      rejectVisible: false,
       activeIndex: '0',
       tableData: [
       ],
       total: 0,
-      isshow:true
+      isshow: true
     }
   },
-    mounted() {
+  mounted() {
     // 一个月前
     const nowdate1 = new Date()
     nowdate1.setMonth(nowdate1.getMonth() - 1)
@@ -140,16 +139,16 @@ export default {
     const s2 = nowdate2.getSeconds()
     this.form.endTime = y2 + '-' + m2 + '-' + d2 + ' ' + h2 + ':' + min2 + ':' + s2
 
-     this.selectPutForward()
+    this.selectPutForward()
   },
   methods: {
-     handleSelect(key, keyPath) {
-       console.log(key,keyPath)
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath)
       this.form.status = key
-      if(this.form.status==='1'){
-        this.isshow=true
-      }else{
-        this.isshow=false
+      if (this.form.status === '1') {
+        this.isshow = true
+      } else {
+        this.isshow = false
       }
       this.selectPutForward()
     },
@@ -177,15 +176,15 @@ export default {
       })
     },
     // 提现申请通过，后台
-     putForwardAdopt(id){
-       this.passform.id=id
+    putForwardAdopt(id) {
+      this.passform.id = id
       API.putForwardAdopt(this.passform).then(res => {
         if (res.code === 200) {
           this.$message({
-							showClose: true,
-							message:res.message,
-							type: 'success'
-						});
+            showClose: true,
+            message: res.message,
+            type: 'success'
+          })
           console.log(res.data)
           this.selectPutForward()
         } else {
@@ -199,22 +198,22 @@ export default {
         this.loading = false
       })
     },
-    rejectDialog(){
-      this.rejectform.msg=''
+    rejectDialog() {
+      this.rejectform.msg = ''
     },
-    putForwardReject(id){
-       this.rejectVisible = true
-      this.rejectform.id=id
+    putForwardReject(id) {
+      this.rejectVisible = true
+      this.rejectform.id = id
     },
-    rejectsubmit(){
-       this.rejectVisible=false
+    rejectsubmit() {
+      this.rejectVisible = false
       API.putForwardReject(this.rejectform).then(res => {
         if (res.code === 200) {
           this.$message({
-							showClose: true,
-							message:res.message,
-							type: 'success'
-						});
+            showClose: true,
+            message: res.message,
+            type: 'success'
+          })
           console.log(res.data)
           this.selectPutForward()
         } else {

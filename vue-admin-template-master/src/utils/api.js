@@ -152,6 +152,15 @@ const API = {
     //          load:true
   })
 },
+//审核商品列表成功之后，修改物流单号
+modifyLogistics: (data) => {
+  return request({
+    url: '/goodsOrder/modifyLogistics',
+    method: 'post',
+    data: data
+    //          load:true
+  })
+},
   // 获取用户信息 成功
   getUserInfo: (data) => {
     return request({

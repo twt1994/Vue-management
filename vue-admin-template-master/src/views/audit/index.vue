@@ -1,3 +1,4 @@
+
 <template>
   <div class="audit-container">
       <el-form ref="tradeRecordForm" :model="tradeRecordForm" label-width="80px" @keyup.enter.native="selectExamineList">
@@ -53,6 +54,7 @@
       </el-table-column>
       <el-table-column prop="state" label="状态">
         <template slot-scope="scope">
+           <!-- <span v-if="scope.row.state == -1">全部 </span> -->
           <span v-if="scope.row.state == 1">待审核 </span>
           <span v-if="scope.row.state == 2">审核成功</span>
           <span v-if="scope.row.state == 3">驳回</span>
@@ -62,14 +64,15 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
            <span v-if="scope.row.state == 2 ||scope.row.state == 3"style="color:blue;cursor:pointer" @click="selectById(scope.row.id)">查看</span>
-           <span v-if="scope.row.state == 1" style="color:blue;cursor:pointer" @click="adoptGoodsOrder(scope.row.id)">通过</span>
+           <span v-if="scope.row.state == 1" style="color:blue;cursor:pointer" @click="adoptGoodsOrder(scope.row.id,0)">通过</span>
+           <span v-if="scope.row.state == 2" style="color:blue;cursor:pointer" @click="modifyLogistics(scope.row.id,scope.row.networkNumber,scope.row.logisticsNumber)">修改订单</span>
            <span v-if="scope.row.state == 2 ||scope.row.state == 1" style="color:blue;cursor:pointer" @click="rejectGoodsOrder(scope.row.id)">驳回</span>
           
         </template>
       </el-table-column>
     </el-table>
-     <!-- <el-button style="margin-top:40px;margin-left:30px;" @click="adoptGoodsOrder(multipleSelection)">批量通过订单</el-button> -->
-     <el-pagination :current-page="tradeRecordForm.current" class="pagination" :page-sizes="[30, 50, 100, 200]" @size-change="handleSizeChange" :page-size="tradeRecordForm.size" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper" :total="total"/>\
+     <el-button style="margin-top:40px;margin-left:30px;" @click="adoptGoodsOrder(multipleSelection,1)">批量通过订单</el-button>
+     <el-pagination :current-page="tradeRecordForm.current" class="pagination" :page-sizes="[30, 50, 100, 200]" @size-change="handleSizeChange" :page-size="tradeRecordForm.size" @current-change="handleCurrentChange" layout="total, sizes, prev, pager, next, jumper" :total="total"/>
       <!-- 驳回弹窗 -->
       <el-dialog :visible.sync="rejectVisible" @close="rejectDialog">
        输入驳回原因:&nbsp;<el-input
@@ -77,6 +80,18 @@
         style="width:500px;margin-right:30px;"/>
       <div slot="footer" style="text-align:center">
 				<el-button type="primary" @click="rejectsubmit">确 定</el-button>
+			</div>
+    </el-dialog>
+     <!-- 修改物流单号弹窗 -->
+      <el-dialog :visible.sync="numberVisible" @close="numberDialog">
+       官网单号:&nbsp;<el-input
+        v-model="numberform.networkNumber"
+        style="width:500px;"/>
+        物流单号:&nbsp;<el-input
+        v-model="numberform.logisticsNumber"
+        style="width:500px;"/>
+      <div slot="footer" style="text-align:center">
+				<el-button type="primary" @click="numbersubmit">确 定</el-button>
 			</div>
     </el-dialog>
      <!-- 查看弹窗 -->
@@ -151,7 +166,7 @@ export default {
   data() {
     return {
       tradeRecordForm: {
-        state: -1,
+        state:'-1',
         keyword: '',
         orderNumber: '',
         asin: '',
@@ -160,13 +175,14 @@ export default {
         current: 1,
         size: 10
       },
-      activeIndex: '1',
+      activeIndex: '-1',
       total: 0,
       detailData: {},
       multipleSelection: [],
       tableData: [],
       rejectVisible:false,
       lookDialogVisible:false,
+      numberVisible:false,
       lookform:{
         id:''
       },
@@ -174,6 +190,11 @@ export default {
        rejectform:{
           id:'',
           msg:''
+      },
+      numberform:{
+        id:'',
+        networkNumber:'',
+        logisticsNumber:''
       }
     }
   },
@@ -206,13 +227,16 @@ export default {
       })
     },
     //审核商品通过
-    adoptGoodsOrder(param) {
-      var obj ={ "id":param}
-      console.log(obj,1111111111111)
+    adoptGoodsOrder(param,state) {
       var arr=[]
-        arr.push(JSON.stringify(obj))
-        console.log(arr,9999999999)
-      API.adoptGoodsOrder(arr).then(res => {
+      if(state==0){
+        var obj ={ "id":param}
+        console.log(obj,1111111111111)
+        arr.push(obj)
+      }else{
+        arr = param;
+      }
+      API.adoptGoodsOrder(JSON.stringify(arr)).then(res => {
         if (res.code == 200) {
           this.$message({
             showClose: true,
@@ -259,9 +283,45 @@ export default {
         this.loading = false
       })
     },
+    //修改订单
+    modifyLogistics(id,networkNumber,logisticsNumber){
+      this.numberform.id=id
+      this.numberform.networkNumber=networkNumber
+      this.numberform.logisticsNumber=logisticsNumbe
+    },
+    numbersubmit(id,networkNumber,logisticsNumber) {
+      this.numberVisible = false;
+      // this.numberform.id=id
+      // this.numberform.networkNumber=networkNumber
+      // this.numberform.logisticsNumber=logisticsNumber
+      API.modifyLogistics(this.numberform).then(res => {
+        if (res.code === 200) {
+          // this.detailData = res.data
+          // this.numberform.networkNumber =res.data.records.networkNumber;
+          //  this.numberform.logisticsNumber=res.data.records.logisticsNumber;
+          this.$message({
+							showClose: true,
+							message:res.message,
+							type: 'success'
+						});
+          console.log(res.data)
+          this.selectExamineList()
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.loading = false
+      })
+    },
+    numberDialog(){
+      // this.numberVisible=false;
+    },
     //查看
     lookcloseDialog(){
-
     },
     looksubmit(){
       this.lookDialogVisible=false;
@@ -278,7 +338,7 @@ export default {
 							type: 'success'
 						});
           console.log(res.data)
-          this.selectGoodsOrder()
+          this.selectExamineList()
         } else {
           this.$message({
             showClose: true,
@@ -291,13 +351,14 @@ export default {
       })
     },
      // 点击选中某一条数据
-    // changeChose(id, e) {
-    //   if (e.target.checked) {
-    //     this.multipleSelection.push(id)
-    //   } else {
-    //     this.multipleSelection.splice(this.multipleSelection.indexOf(id), 1)
-    //   }
-    // },
+    changeChose(id, e) {
+      let param = {"id":id};
+      if (e.target.checked) {
+        this.multipleSelection.push(param)
+      } else {
+        this.multipleSelection.splice(this.multipleSelection.indexOf(id),1)
+      }
+    },
      // 点击页码跳转
     handleCurrentChange(val) {
       this.tradeRecordForm.current = val
@@ -316,28 +377,22 @@ export default {
 	.audit-container {
 		margin-top: 20px;
 	}
-
 	.audit-container .el-form-item {
 		width: 300px;
 		display: inline-block;
 	}
-
 	.audit-container .el-form-item__content {
 		width: 220px;
 	}
-
 	.audit-container .el-select {
 		width: 100%;
 	}
-
 	.audit-container .el-table td,
 	.audit-container .el-table th.is-leaf {
 		text-align: center;
 	}
-
 	.pagination {
 		float: right;
 		margin-top: 40px;
 	}
 </style>
-
