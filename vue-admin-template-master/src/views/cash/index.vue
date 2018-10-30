@@ -40,11 +40,11 @@
             <span style="margin-left: 10px">{{ scope.row.alipay }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="收款名" min-width="150" align="center">
+        <!-- <el-table-column label="收款名" min-width="150" align="center">
           <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.alipayname }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="status" label="状态" min-width="150" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.status == 1" style="margin-left: 10px">待审核</span>

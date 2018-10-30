@@ -72,7 +72,7 @@
       </el-table-column>
     </el-table>
     <el-button style="margin-top:40px;margin-left:30px;" @click="adoptGoodsOrder(multipleSelection,1)">批量通过订单</el-button>
-    <el-pagination :current-page="tradeRecordForm.current" :page-sizes="[30, 50, 100, 200]" :page-size="tradeRecordForm.size" class="pagination" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange"/>
+    <el-pagination :current-page="tradeRecordForm.current" :page-sizes="[30, 50, 100, 200]" :page-size="tradeRecordForm.size" :total="total" class="pagination" layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"/>
     <!-- 驳回弹窗 -->
     <el-dialog :visible.sync="rejectVisible" @close="rejectDialog">
       输入驳回原因:&nbsp;<el-input
@@ -210,6 +210,7 @@ export default {
     selectExamineList() {
       const loginData = JSON.parse(getLoginData())
       this.tradeRecordForm.uid = loginData.id
+      this.tableData = []
       API.selectExamineList(this.tradeRecordForm).then(res => {
         if (res.code == 200) {
           this.total = res.data.total

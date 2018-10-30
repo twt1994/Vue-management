@@ -42,7 +42,7 @@ export default {
             message: res.message,
             type: 'success'
           })
-           this.formLabelAlign.msg=''
+          window.location.reload()
         }else{
          this.$message({
             showClose: true,
@@ -56,6 +56,7 @@ export default {
     },
     submit(){
          this.modifyHelpConfig()
+        //  window.location.reload()
         //  this.formLabelAlign.msg=''
     }
   }

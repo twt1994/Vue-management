@@ -44,6 +44,11 @@ export default {
       var obj = { 'param': JSON.stringify(this.param) }
       API.modifyExchangeRate(obj).then(res => {
         if (res.code === 200) {
+          this.$message({
+            showClose: true,
+            message: '汇率修改成功',
+            type: 'success'
+          })
           this.selectExchangeRate()
         } else {
           this.$message({

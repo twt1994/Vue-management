@@ -20,7 +20,7 @@
 
 <script>
   import {getToken} from '@/utils/auth'
-
+import { Message, MessageBox } from 'element-ui'
   export default {
     name: 'editorSlideUpload',
     props: {
@@ -31,12 +31,12 @@
     },
     data() {
       return {
-        uploadUrl:process.env.BASE_API + '/plupload',
+        uploadUrl:process.env.BASE_API + '/helpConfig/uploadingFile',
         dialogVisible: false,
         listObj: {},
         fileLists: [],
         upLoadData: {upfile: null},
-        fileHeaders: {'X-Token': getToken()}
+        fileHeaders: {'token': getToken()}
       }
     },
     methods: {
